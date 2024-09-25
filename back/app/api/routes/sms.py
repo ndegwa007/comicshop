@@ -1,5 +1,3 @@
-# main.py
-
 from fastapi import APIRouter, HTTPException, Request
 import africastalking
 import os
@@ -8,11 +6,11 @@ from loguru import logger
 router = APIRouter()
 
 # Initialize Africa's Talking
-africastalking.initialize(username='swifty', api_key=os.getenv('SMS_KEY'))
+africastalking.initialize(username='swiftyish', api_key=os.getenv('SMS_KEY'))
 sms = africastalking.SMS
 
-# Endpoint to send a one-time message without a Pydantic model
-@router.post("/api/update-phone")
+
+@router.post("/update-phone")
 async def send_message(request: Request):
     # Extract phone number directly from the request body
     try:
@@ -33,8 +31,6 @@ async def send_message(request: Request):
         # Handle SMS sending failure or JSON parsing issues
         raise HTTPException(status_code=400, detail=f"Failed to send message: {str(e)}")
 
-# Run the app using the following command:
-# uvicorn main:app --reload
 
 
 

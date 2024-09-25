@@ -56,7 +56,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/api/update-phone', {
+      const response = await fetch('http://localhost:8000/update-phone', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
