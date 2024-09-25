@@ -1,0 +1,60 @@
+{
+    "comicPosters": [
+        {
+          "id": 1,
+          "title": "Spider-Man: Into the Spider-Verse",
+          "price": 24.99,
+          "image": "/images/spiderman_returns.jpg"
+        },
+        {
+          "id": 2,
+          "title": "Batman: The Dark Knight Returns",
+          "price": 29.99,
+          "image": "/images/batman_returns.jpg?height=400&width=300"
+        },
+        {
+          "id": 3,
+          "title": "Wonder Woman: Amazon Warrior",
+          "price": 22.99,
+          "image": "/images/wonder_woman.jpg?height=400&width=300"
+        },
+        {
+          "id": 4,
+          "title": "X-Men: Days of Future Past",
+          "price": 26.99,
+          "image": "/images/xmen.jpg?height=400&width=300"
+        },
+        {
+          "id": 5,
+          "title": "The Avengers: Infinity War",
+          "price": 28.99,
+          "image": "/images/avengers.jpg?height=400&width=300"
+        },
+        {
+          "id": 6,
+          "title": "Superman: Man of Steel",
+          "price": 23.99,
+          "image": "/images/superman.jpg?height=400&width=300"
+        },
+        {
+          "id": 7,
+          "title": "Black Panther: Wakanda Forever",
+          "price": 27.99,
+          "image": "/images/black_panther.jpg?height=400&width=300"
+        },
+        {
+          "id": 8,
+          "title": "Captain America: The First Avenger",
+          "price": 25.99,
+          "image": "/images/captain_america.jpg?height=400&width=300"
+        },
+        {
+          "id": 9,
+          "title": "Iron Man: Extremis",
+          "price": 26.99,
+          "image": "/images/iron_man.jpg?height=400&width=300"
+        }
+      ]
+
+
+}
