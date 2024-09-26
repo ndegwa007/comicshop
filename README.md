@@ -11,7 +11,7 @@ SwiftyApp provides a simple and user-friendly platform to browse, purchase, and 
 
 - **Backend:** [FastAPI](https://fastapi.tiangolo.com/)
 - **Frontend:** [Astro](https://astro.build/)
-- **Database:** PostgreSQL (or your preferred database)
+- **Database:** PostgreSQL
 - **Deployment:** Docker (optional)
 
 ## 🔨 Features
