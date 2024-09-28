@@ -275,7 +275,6 @@ const ComicStore = () => {
         {showOrders && (
           <OrdersPage latestOrder={latestOrder} onClose={() => setShowOrders(false)} />
         )}
-
         
       </main>
     </div>

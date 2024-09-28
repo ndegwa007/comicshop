@@ -94,9 +94,18 @@ async def update_order(order_id: UUID, params: OrderUpdate, db: AsyncSession = D
     logger.info(f"updated order: {order}")
     return order
 
-@router.delete("/orders/{order_id}", response_model=Order)
+@router.delete("/order/{order_id}", response_model=Order)
 async def delete_order(order_id: UUID, db: AsyncSession = Depends(get_db_session)) -> Order:
     logger.info(f"deleting order with id: {order_id}")
     order = await crudorders.delete_order(order_id, db)
     logger.info(f"deleted order: {order}")
     return order
+
+"""
+@router.delete("/orders/{user_id}", response_model=Sequence[Order]) 
+async def delete_orders(user_id: UUID, db:AsyncSession = Depends(get_db_session)):
+    logger.info(f"delete all orders for current user")
+    orders = await crudorders.delete_orders_by_userid(user_id, db)
+    logger.info(f"deleted orders")
+    return orders
+"""

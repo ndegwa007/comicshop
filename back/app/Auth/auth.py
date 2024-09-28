@@ -170,9 +170,11 @@ async def auth(request: Request, db: AsyncSession = Depends(get_db_session)):
     access_token = create_access_token({"sub": email, "name": name, "user_id": str(user.userid)})
     logger.info(f"Access token created for user: {email}")
     # return({"access_token": access_token, "token_type": "bearer", "user_info": user_info})
-    response = RedirectResponse(url="http://localhost:4321/products")
-    response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
-    return response
+
+    #response = RedirectResponse(url="http://localhost:4321/products")
+    #response.set_cookie(key="access_token", value=access_token, httponly=True, secure=True)
+    #return response
+    return {"email": email, "name": name }, access_token
 
 async def get_access_token_from_cookie(request: Request):
     access_token = request.cookies.get("access_token")

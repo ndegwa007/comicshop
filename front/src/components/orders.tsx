@@ -5,9 +5,11 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
 import { Trash2 } from 'lucide-react'
+import { jwtDecode } from 'jwt-decode';
+import { v4 as uuidv4 } from 'uuid';
 
 interface Order {
-  order_id: number;
+  order_id: uuidv4;
   item_name: string;
   order_time: string;
   quantity: number;
@@ -23,14 +25,21 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
   const [mobileNumber, setMobileNumber] = useState("");
   const [openPhoneDialog, setOpenPhoneDialog] = useState(false);
 
+
+
   useEffect(() => {
     const fetchOrders = async () => {
+      const token = localStorage.getItem('access_token')
+      const decodedToken = jwtDecode(token)
+      const userid = decodedToken['user_id']
+     
       try {
-        const response = await fetch('http://localhost:8000/api/orders', {
+        const response = await fetch(`http://localhost:8000/orders/${userid}`, {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
           },
         });
+        console.log(response)
         if (response.ok) {
           const data = await response.json();
           setOrders(data);
@@ -73,15 +82,19 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
     }
   };
 
+  /*
   const handleClearCart = async () => {
     try {
-      const response = await fetch('http://localhost:8000/api/clear-cart', {
-        method: 'POST',
+      const token = localStorage.getItem('access_token')
+      const decodedToken = jwtDecode(token)
+      const userid = decodedToken['user_id']
+      const response = await fetch(`http://localhost:8000/orders/${userid}`, {
+        method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
         },
       });
-
+      console.log(response)
       if (response.ok) {
         setOrders([]);
         alert('Cart cleared successfully!');
@@ -93,10 +106,11 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
       alert('Failed to clear cart. Please try again.');
     }
   };
+  */
 
   const handleRemoveOrder = async (order_id: string) => {
     try {
-      const response = await fetch(`http://localhost:8000/orders/${order_id}`, {
+      const response = await fetch(`http://localhost:8000/order/${order_id}`, {
         method: 'DELETE',
         headers: {
           'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
@@ -121,7 +135,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
         <div className="flex justify-between items-center mb-4">
           <h2 className="text-2xl font-bold">Your Comics</h2>
           <div className="space-x-2">
-            <Button onClick={handleClearCart} variant="destructive">Clear Cart</Button>
+             
             <Button onClick={onClose}>Close</Button>
           </div>
         </div>

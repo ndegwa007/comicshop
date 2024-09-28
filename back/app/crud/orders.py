@@ -25,6 +25,8 @@ async def get_orders_by_userid(userid: UUID, db: AsyncSession) -> Sequence[Order
     orders = await (db.scalars(select(models.Order).where(models.Order.user_id == userid)))
     return orders
 
+
+
 async def get_order(order_id: UUID, db_session: AsyncSession) -> Order:
     order = (
         await db_session.scalars(select(models.Order).where(models.Order.order_id == str(order_id)))
@@ -57,5 +59,27 @@ async def delete_order(order_id:UUID, db_session: AsyncSession) -> Order:
         await db_session.rollback()
         raise HTTPException(status_code=500, detail="an error occured while deleting order")
     return order
+"""
+async def delete_orders_by_userid(userid:UUID, db_session: AsyncSession) -> Sequence[Order]:
+    orders = await get_orders_by_userid(userid, db_session)
     
+
+    if orders is None:
+        raise HTTPException(status_code=404, detail="orders not found")
+    
+    try:
+        await db_session.delete(orders)
+        await db_session.commit()
+    except SQLAlchemyError as e:
+        await db_session.rollback()
+        raise HTTPException(status_code=500, detail="an error occured while deleting order")
+    return orders
+"""
+    
+
+    
+
+
+    
+
     

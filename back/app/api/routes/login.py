@@ -7,8 +7,10 @@ from app.database.session import get_db_session
 from sqlalchemy.ext.asyncio import AsyncSession
 from datetime import timedelta
 from loguru import logger
-from fastapi.responses import HTMLResponse
+from fastapi.responses import HTMLResponse, RedirectResponse
 from app.crud.users import get_user
+
+from urllib.parse import urlencode
 
 
 
@@ -70,8 +72,44 @@ async def login_route(user: UserLogin, db: AsyncSession = Depends(get_db_session
 
 
 
-    
+@router.get("/auth", name="auth")
+async def auth_route(request: Request, db: AsyncSession = Depends(get_db_session)):
+    logger.info("Handling auth callback")
+    try:
+        result = await auth(request, db)
+        logger.info(f"Authentication successful, preparing redirect")
+        
+        access_token = result[1]
+        user_info = result[0]
+        
+        # Encode user info in the redirect URL
+        frontend_url = "http://localhost:4321/products"
+        query_params = urlencode({
+            'token': access_token,
+            'name': user_info.get('name', ''),
+            'email': user_info.get('email', '')
+        })
+        redirect_url = f"{frontend_url}?{query_params}"
+        
+        response = RedirectResponse(url=redirect_url)
+        
+        # Set the access token as a cookie as well
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite='lax'
+        )
+        
+        logger.info(f"Redirecting to frontend with user info and set cookie")
+        return response
+    except Exception as e:
+        logger.error(f"Auth failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
 
+    
+"""
 @router.get("/auth", name="auth")
 async def auth_route(request: Request, db: AsyncSession = Depends(get_db_session)):
     logger.info("Handling auth callback")
@@ -82,6 +120,39 @@ async def auth_route(request: Request, db: AsyncSession = Depends(get_db_session
     except Exception as e:
         logger.error(f"Auth failed: {str(e)}")
         raise HTTPException(status_code=400, detail=str(e))
+
+
+"""
+"""
+@router.get("/auth", name="auth")
+async def auth_route(request: Request, db: AsyncSession = Depends(get_db_session)):
+    logger.info("Handling auth callback")
+    try:
+        # Get the user information and access token from the auth function
+        user_info, access_token = await auth(request, db)
+        
+        # Log the successful authentication
+        logger.info(f"User authenticated: {user_info['email']}")
+
+        # Create a response that redirects to the products page
+        response = RedirectResponse(url="http://localhost:4321/products")
+        
+        # Set the access token as a secure HTTP-only cookie
+        response.set_cookie(
+            key="access_token",
+            value=access_token,
+            httponly=True,
+            secure=True,
+            samesite='lax'
+        )
+
+        logger.info(f"Redirecting to products page with set cookie")
+        return response
+
+    except Exception as e:
+        logger.error(f"Auth failed: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+"""
 
 """
 @router.get("/api/get-access-token")
