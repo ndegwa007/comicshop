@@ -11,7 +11,7 @@ class UserBase(BaseModel):
     orders: Optional["Order"] = []
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class UserCreate(UserBase):
     pass

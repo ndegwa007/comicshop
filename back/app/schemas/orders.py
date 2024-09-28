@@ -12,7 +12,7 @@ class OrderBase(BaseModel):
     user_id: uuid.UUID
 
     class Config:
-        orm_mode = True
+        from_attributes = True
 
 class OrderCreate(OrderBase):
     pass

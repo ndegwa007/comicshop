@@ -6,7 +6,7 @@ from loguru import logger
 router = APIRouter()
 
 # Initialize Africa's Talking
-africastalking.initialize(username='swiftyish', api_key=os.getenv('SMS_KEY'))
+africastalking.initialize(username='sandbox', api_key=os.getenv('SMS_KEY'))
 sms = africastalking.SMS
 
 
@@ -25,7 +25,7 @@ async def send_message(request: Request):
         custom_message = "Your order is being processed swiftly by swifty! Enjoy your comics"
 
         # Send SMS to the user using Africa's Talking
-        response = sms.send(custom_message, [phone_number], "SWIFTY")
+        response = sms.send(custom_message, [phone_number], "swifty")
         return {"message": "Message sent successfully!", "response": response}
     except Exception as e:
         # Handle SMS sending failure or JSON parsing issues

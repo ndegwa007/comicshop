@@ -4,10 +4,10 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from 
 import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Button } from "@/components/ui/button"
-import { jwtDecode } from 'jwt-decode';
+import { Trash2 } from 'lucide-react'
 
 interface Order {
-  order_id: string;
+  order_id: number;
   item_name: string;
   order_time: string;
   quantity: number;
@@ -26,11 +26,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
   useEffect(() => {
     const fetchOrders = async () => {
       try {
-        const token = localStorage.getItem('access_token')
-        const decodedToken = jwtDecode(token)
-        const userid = decodedToken["user_id"]
-
-        const response = await fetch(`http://localhost:8000/orders/${userid}`, {
+        const response = await fetch('http://localhost:8000/api/orders', {
           headers: {
             'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
           },
@@ -56,7 +52,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
   const handlePhoneSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await fetch('http://localhost:8000/update-phone', {
+      const response = await fetch('http://localhost:8000/api/update-phone', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -77,12 +73,57 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
     }
   };
 
+  const handleClearCart = async () => {
+    try {
+      const response = await fetch('http://localhost:8000/api/clear-cart', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (response.ok) {
+        setOrders([]);
+        alert('Cart cleared successfully!');
+      } else {
+        throw new Error('Failed to clear cart');
+      }
+    } catch (error) {
+      console.error('Error clearing cart:', error);
+      alert('Failed to clear cart. Please try again.');
+    }
+  };
+
+  const handleRemoveOrder = async (order_id: string) => {
+    try {
+      const response = await fetch(`http://localhost:8000/orders/${order_id}`, {
+        method: 'DELETE',
+        headers: {
+          'Authorization': `Bearer ${localStorage.getItem('access_token')}`,
+        },
+      });
+
+      if (response.ok) {
+        setOrders(prevOrders => prevOrders.filter(order => order.id !== order_id));
+        alert('Order removed successfully!');
+      } else {
+        throw new Error('Failed to remove order');
+      }
+    } catch (error) {
+      console.error('Error removing order:', error);
+      alert('Failed to remove order. Please try again.');
+    }
+  };
+
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-background p-6 rounded-lg shadow-lg max-w-4xl w-full max-h-[80vh] overflow-auto">
         <div className="flex justify-between items-center mb-4">
-          <h2 className="text-2xl font-bold">Your Orders</h2>
-          <Button onClick={onClose}>Close</Button>
+          <h2 className="text-2xl font-bold">Your Comics</h2>
+          <div className="space-x-2">
+            <Button onClick={handleClearCart} variant="destructive">Clear Cart</Button>
+            <Button onClick={onClose}>Close</Button>
+          </div>
         </div>
         <div className="rounded-md border mb-4">
           <Table>
@@ -91,6 +132,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
                 <TableHead>Item Name</TableHead>
                 <TableHead>Order Placed At</TableHead>
                 <TableHead className="text-right">Quantity</TableHead>
+                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -99,6 +141,15 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
                   <TableCell className="font-medium">{order.item_name}</TableCell>
                   <TableCell>{new Date(order.order_time).toLocaleString()}</TableCell>
                   <TableCell className="text-right">{order.quantity}</TableCell>
+                  <TableCell className="text-right">
+                    <Button
+                      onClick={() => handleRemoveOrder(order.order_id)}
+                      variant="ghost"
+                      size="sm"
+                    >
+                      <Trash2 className="h-4 w-4" />
+                    </Button>
+                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>
