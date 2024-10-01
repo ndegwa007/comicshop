@@ -29,7 +29,7 @@ This project is currently under development. Some features may be incomplete or 
 
 1. **Clone the repository:**
     ```bash
-    git clone https://github.com/yourusername/swiftyapp.git
+    git clone https://github.com/ndegwa007/swiftyapp.git
     cd swiftyapp
     ```
 
