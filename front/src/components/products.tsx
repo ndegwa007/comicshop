@@ -16,6 +16,12 @@ interface ComicPoster {
   image: string;
 }
 
+interface ComicStoreProps {
+  initialUsername: string | null;
+  initialToken: string | null;
+}
+
+
 const comicPosters: ComicPoster[] = [
   {
     id: uuidv4(),
@@ -73,7 +79,7 @@ const comicPosters: ComicPoster[] = [
   }
 ];
 
-const ComicStore = () => {
+const ComicStore: React.FC<ComicStoreProps> = ({initialUsername, initialToken}) => {
   const [cart, setCart] = useState<{ id: number; quantity: number }[]>([]);
   const [showCart, setShowCart] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
@@ -81,35 +87,72 @@ const ComicStore = () => {
   const [latestOrder, setLatestOrder] = useState(null);
 
 
-  useEffect(() => {
-    const fetchCurrentUser = async () => {
-      try {
-        const token = localStorage.getItem('access_token');
-    
-        
-        const response = await fetch('http://localhost:8000/protected', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Bearer ${token}`,
-          },
-          credentials: 'include',
-        });
-        // console.log(response)
-        if (response.ok) {
-          const data = await response.json();
-          setUsername(data.name);
-        } else if (response.status === 401) {
-          setUsername(null);
-        } else {
-          console.error('Failed to fetch current user');
-        }
-      } catch (error) {
-        console.error('Error fetching current user:', error);
-      }
-    };
 
-    fetchCurrentUser();
-  }, []);
+
+  useEffect(() => {
+    if (initialUsername && initialToken) {
+      setUsername(initialUsername);
+      localStorage.setItem('access_token', initialToken);
+      localStorage.setItem('username', initialUsername);
+    } else {
+      // Check localStorage for existing session
+      const storedUsername = localStorage.getItem('username');
+      if (storedUsername) {
+        setUsername(storedUsername);
+      } else {
+        // If no stored username, fetch current user
+        fetchCurrentUser();
+      }
+    }
+
+    // Listen for the custom event
+    const handleUserLoggedIn = (event: CustomEvent) => {
+      const { username, token } = event.detail;
+      setUsername(username);
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('username', username);
+     
+    };
+    
+
+    window.addEventListener('userLoggedIn', handleUserLoggedIn as EventListener);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('userLoggedIn', handleUserLoggedIn as EventListener);
+    };
+  }, [initialToken,  initialUsername]);
+
+  const fetchCurrentUser = async () => {
+    try {
+      const token = localStorage.getItem('access_token');
+      
+      if (!token) {
+        console.log('No token found, user is not authenticated');
+        return;
+      }
+
+      const response = await fetch('http://localhost:8000/protected', {
+        method: 'GET',
+        headers: {
+          'Authorization': `Bearer ${token}`,
+        },
+        credentials: 'include',
+      });
+
+      if (response.ok) {
+        const data = await response.json();
+        setUsername(data.name);
+      } else if (response.status === 401) {
+        setUsername(null);
+        localStorage.removeItem('access_token');
+      } else {
+        console.error('Failed to fetch current user');
+      }
+    } catch (error) {
+      console.error('Error fetching current user:', error);
+    }
+  };
 
   const handleLogin = () => {
     window.location.href = 'http://localhost:4321/login';

@@ -2,8 +2,44 @@
 import '../styles/global.css';
 import MainLayout from '../layouts/MainLayout.astro';
 import ComicStore from '../components/products'
+
+
+// const searchParams = Astro.url.searchParams;
+const username = 'Guest';
+const token = null;
+
+
+
+// If we have both username and token, we know it's a direct login
+//const isDirectLogin = username && token;
 ---
 
-<MainLayout>
-    <ComicStore client:load />
+<MainLayout title="Comic Store">
+  <ComicStore client:load initialUsername={username} initialToken={token} />
+
+  <script>
+    // Use client-side URLSearchParams to extract the token and username
+    const searchParams = new URLSearchParams(window.location.search);
+    const username = searchParams.get('name');
+    const token = searchParams.get('token');
+    //const email = searchParams.get('email'); // If needed
+
+    // Log to verify if values are correctly parsed on the client-side
+    //console.log('Client-side Parsed Username:', username);
+    //console.log('Client-side Parsed Token:', token);
+    //console.log('Client-side Parsed Email:', email); // Optional
+
+    // If we have both username and token, proceed with storing them
+    if (username && token) {
+      // Store the token and username in localStorage
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('username', username);
+
+      // Dispatch a custom event to notify the React component
+      window.dispatchEvent(new CustomEvent('userLoggedIn', { 
+        detail: { username, token }
+      }));
+    }
+    </script>
 </MainLayout>
+
