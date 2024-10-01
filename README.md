@@ -36,7 +36,9 @@ This project is currently under development. Some features may be incomplete or 
 2. **Backend Setup:**
     - Navigate to the `backend` directory and install dependencies:
     ```bash
-    cd backend
+    cd back
+    python -m venv venv
+    source venv/bin/activate 
     pip install -r requirements.txt
     ```
 
@@ -48,7 +50,7 @@ This project is currently under development. Some features may be incomplete or 
 3. **Frontend Setup:**
     - Navigate to the `frontend` directory and install dependencies:
     ```bash
-    cd ../frontend
+    cd ../front
     npm install
     ```
 
