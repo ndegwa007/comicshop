@@ -10,7 +10,7 @@ africastalking.initialize(username='sandbox', api_key=os.getenv('SMS_KEY'))
 sms = africastalking.SMS
 
 
-@router.post("/update-phone")
+@router.post("/api/update-phone")
 async def send_message(request: Request):
     # Extract phone number directly from the request body
     try:

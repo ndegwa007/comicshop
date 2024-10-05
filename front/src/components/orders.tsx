@@ -107,7 +107,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
     }
   };
   */
-
+/*
   const handleRemoveOrder = async (order_id: string) => {
     try {
       const response = await fetch(`http://localhost:8000/order/${order_id}`, {
@@ -128,7 +128,7 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
       alert('Failed to remove order. Please try again.');
     }
   };
-
+*/
   return (
     <div className="fixed inset-0 bg-background/80 backdrop-blur-sm z-50 flex items-center justify-center">
       <div className="bg-background p-6 rounded-lg shadow-lg max-w-4xl w-full max-h-[80vh] overflow-auto">
@@ -146,7 +146,6 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
                 <TableHead>Item Name</TableHead>
                 <TableHead>Order Placed At</TableHead>
                 <TableHead className="text-right">Quantity</TableHead>
-                <TableHead className="text-right">Action</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -155,15 +154,6 @@ const OrdersPage: React.FC<OrdersPageProps> = ({ latestOrder, onClose }) => {
                   <TableCell className="font-medium">{order.item_name}</TableCell>
                   <TableCell>{new Date(order.order_time).toLocaleString()}</TableCell>
                   <TableCell className="text-right">{order.quantity}</TableCell>
-                  <TableCell className="text-right">
-                    <Button
-                      onClick={() => handleRemoveOrder(order.order_id)}
-                      variant="ghost"
-                      size="sm"
-                    >
-                      <Trash2 className="h-4 w-4" />
-                    </Button>
-                  </TableCell>
                 </TableRow>
               ))}
             </TableBody>

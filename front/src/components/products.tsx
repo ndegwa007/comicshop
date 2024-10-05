@@ -191,6 +191,23 @@ const ComicStore: React.FC<ComicStoreProps> = ({initialUsername, initialToken}) 
       }
     });
   };
+
+
+  const removeFromCart = (posterId: number) => {
+    setCart(prevCart => {
+      const existingItemIndex = prevCart.findIndex(item => item.id === posterId);
+      if (existingItemIndex >= 0) {
+        const updatedCart = [...prevCart];
+        if (updatedCart[existingItemIndex].quantity > 1) {
+          updatedCart[existingItemIndex].quantity -= 1;
+        } else {
+          updatedCart.splice(existingItemIndex, 1);
+        }
+        return updatedCart;
+      }
+      return prevCart;
+    });
+  };
   //console.log(cart)
   const handleCheckout = async () => {
 
@@ -221,7 +238,7 @@ const ComicStore: React.FC<ComicStoreProps> = ({initialUsername, initialToken}) 
             }
     }).filter(item => item !== item.null)
 
-    console.log(transformedCart)
+    // console.log(transformedCart)
     try {
       const access_token  = localStorage.getItem('access_token')
       const response = await fetch('http://localhost:8000/orders', {
@@ -265,7 +282,7 @@ const ComicStore: React.FC<ComicStoreProps> = ({initialUsername, initialToken}) 
             <button onClick={() => setShowOrders(true)} className="text-sm font-medium">My Comics</button>
             <div className="flex items-center space-x-2 cursor-pointer" onClick={() => setShowCart(!showCart)}>
               <ShoppingCart className="h-5 w-5" />
-              <span>{cart.reduce((total, item) => total + item.quantity, 0)} items</span>
+              <span>{cart.reduce((total, item) => total + item.quantity, 0)} comics</span>
             </div>
             <div className="flex items-center space-x-2">
               <User className="h-5 w-5" />
@@ -312,6 +329,8 @@ const ComicStore: React.FC<ComicStoreProps> = ({initialUsername, initialToken}) 
             cartItems={cart} 
             comicPosters={comicPosters} 
             onCheckout={handleCheckout} 
+            onRemoveFromCart={removeFromCart}
+            onClose={()=> setShowCart(false)}
           />
         )}
 
