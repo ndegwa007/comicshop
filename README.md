@@ -1,11 +1,11 @@
 
-# SwiftyApp
+# Comicshop
 
-SwiftyApp is an open-source web application designed for selling comic posters. It features a FastAPI backend and uses the Astro framework for the frontend. The project is still under active development, and contributions are welcome!
+Comicshop is an open-source web application designed for selling comic posters. It features a FastAPI backend and uses the Astro framework for the frontend. The project is still under active development, and contributions are welcome!
 
 ## 🚀 Project Overview
 
-SwiftyApp provides a simple and user-friendly platform to browse, purchase, and manage comic posters. It aims to deliver a smooth experience for both the buyers and the administrators managing the product catalog.
+Comicshop provides a simple and user-friendly platform to browse, purchase, and manage comic posters. It aims to deliver a smooth experience for both the buyers and the administrators managing the product catalog.
 
 ## 🛠️ Tech Stack
 
